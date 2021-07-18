@@ -1,3 +1,3 @@
-## Hello, world
+## Book highlights
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+- [A Philosophy of Software Design](/book-highlights/philosophy-of-software-design.md)
