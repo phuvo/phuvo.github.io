@@ -1,0 +1,11 @@
+{
+	"compilerOptions": {
+		"allowSyntheticDefaultImports": true,
+		"moduleResolution": "Node",
+		"module": "ES2022",
+		"target": "ES2022",
+		"jsx": "react",
+		"jsxFactory": "h",
+		"strict": true
+	}
+}

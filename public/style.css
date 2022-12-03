@@ -1,0 +1,75 @@
+:root {
+	--font-size-sm: 1rem;
+	--font-size-md: 1.25rem;
+	--font-size-lg: 2rem;
+	--font-size-xl: 4rem;
+
+	--gray-100: #f8f9fa;
+	--gray-800: #343a40;
+	--gray-900: #212529;
+
+	--color-bg: var(--gray-100);
+	--color-text: var(--gray-900);
+	--color-text-lg: var(--gray-800);
+}
+
+@media (max-width: 40rem) {
+	:root {
+		--font-size-xl: 3rem;
+	}
+}
+
+body {
+	font-family: Cambria, serif;
+}
+
+h1 {
+	font-family: Constantia, serif;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+body {
+	margin: 0;
+	font-size: var(--font-size-md);
+	line-height: 1.5;
+	color: var(--color-text);
+	background-color: var(--color-bg);
+}
+
+h1 {
+	font-size: var(--font-size-xl);
+	font-weight: 400;
+	color: var(--color-text-lg);
+}
+
+h2 {
+	font-size: var(--font-size-lg);
+	color: var(--color-text-lg);
+}
+
+article {
+	max-width: 48rem;
+	margin: 0 auto;
+	padding: 0 var(--font-size-md);
+}
+
+/* Katex */
+
+.math .katex {
+	font-size: var(--font-size-md);
+}
+
+@media (max-width: 40rem) {
+	.math-display > .katex-display.fleqn > .katex {
+		padding-left: 0;
+	}
+}
