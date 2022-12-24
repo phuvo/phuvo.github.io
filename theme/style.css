@@ -73,3 +73,15 @@ article {
 		padding-left: 0;
 	}
 }
+
+.math-simple {
+	margin-bottom: 0;
+}
+
+.math-simple + .math > .katex-display {
+	margin: 0;
+}
+
+.math-simple + .math + p {
+	margin-top: 0;
+}
