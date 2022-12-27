@@ -1,0 +1,22 @@
+html {
+	scroll-behavior: smooth;
+}
+
+/* Katex */
+
+.mrel {
+	/* Equal signs are blurry on Windows at 20px */
+	font-size: 1.375rem;
+}
+
+.math-simple {
+	margin-bottom: 0;
+}
+
+.math-simple + .math > .katex-display {
+	margin: 0;
+}
+
+.math-simple + .math + p {
+	margin-top: 0;
+}

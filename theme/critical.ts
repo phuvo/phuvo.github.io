@@ -10,8 +10,8 @@ const cleanCss = new CleanCss({
 	},
 });
 
-const originalCss = await fs.readFile('theme/style.css');
+const originalCss = await fs.readFile('theme/critical.css');
 const minifiedCss = cleanCss.minify(originalCss).styles;
 
-const style = `\n${minifiedCss}\n  `;
-export default style;
+const criticalCss = `\n${minifiedCss}\n    `;
+export default criticalCss;

@@ -1,24 +1,25 @@
-import { h, Result } from 'hastscript';
-import style from './style.js';
+import { h } from 'hastscript';
+import criticalCss from './critical.js';
 
-const tplIndex = (content: Result) => (
+const tplIndex = () => (
   <html lang="en">
     <head>
       <meta charset="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <style>{style}</style>
+      <style>{criticalCss}</style>
+      <link rel="stylesheet" href="/style.css" />
     </head>
 
     <body>
-      <header>
-        {/* todo */}
-      </header>
-      <article>
-        {content}
-      </article>
-      <footer>
-        {/* todo */}
-      </footer>
+      <section>
+        <h2>Math for ML</h2>
+        <a href="/math/linear-algebra.html">
+          <article>
+            <h3>Linear algebra</h3>
+            <p>Vectors and matricies</p>
+          </article>
+        </a>
+      </section>
     </body>
   </html>
 );

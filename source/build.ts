@@ -1,8 +1,9 @@
 import fs from 'node:fs/promises';
-import path from 'node:path';
+import tplDefault from '../theme/default.js';
+import tplIndex from '../theme/index.js';
 
 import glob from 'glob';
-import { Root, RootContent } from 'hast';
+import { DocType, Element, Root, RootContent } from 'hast';
 import rehypeAttrs from 'rehype-attr';
 import rehypeFormat from 'rehype-format';
 import rehypeInferTitleMeta from 'rehype-infer-title-meta';
@@ -19,85 +20,143 @@ import { unified } from 'unified';
 import { VFile } from 'vfile';
 import { reporter } from 'vfile-reporter';
 
-import tplDefault from '../theme/default.js';
-import tplIndex from '../theme/index.js';
-
 const BUILD_DIR = 'build';
-const README_MD = 'README.md';
+const contentProcessor = createProcessor();
 
-function markdownDocument() {
-	return (tree: Root, file: VFile) => {
-		const template = file.basename === README_MD ? tplIndex : tplDefault;
-		return template(tree);
-	};
+function main() {
+    fs.mkdir(BUILD_DIR, { recursive: true });
+	fs.cp('public', BUILD_DIR, { recursive: true });
+
+	glob.sync('content/**/*.md').forEach(convertContent);
+    convertIndex();
+}
+
+async function convertContent(markPath: string) {
+    const markFile = await read(markPath, { encoding: 'utf8' });
+    const htmlFile = await processContent(markFile);
+    console.error(reporter(htmlFile));
+
+    rewritePath(htmlFile);
+    await fs.mkdir(htmlFile.dirname!, { recursive: true });
+    await write(htmlFile);
+}
+
+async function convertIndex() {
+    const indexFile = await processIndex();
+    rewritePath(indexFile);
+    await write(indexFile);
+}
+
+function processContent(markFile: VFile) {
+    return contentProcessor.process(markFile);
+}
+
+async function processIndex() {
+    const processor = unified()
+        .use(indexDocument)
+        .use(rehypeFormat)
+        .use(rehypeStringify, {
+            allowDangerousHtml: true,
+        });
+    const root = await processor.run({ type: 'root' });
+    const html = processor.stringify(root);
+    return new VFile({ path: 'index.html', value: html });
+}
+
+function createProcessor() {
+    return unified()
+        .use(remarkParse)
+        .use(remarkMath)
+        .use(remarkSmartypants)
+        .use(remarkRehype, {
+            allowDangerousHtml: true,
+        })
+        .use(rehypeAttrs, {
+            properties: 'attr',
+        })
+        .use(rehypeKatex, {
+            fleqn: true,
+            macros: {},
+        })
+        .use(rehypeRewrite, {
+            rewrite: rewriteElement,
+        })
+        .use(contentDocument)
+        .use(rehypeInferTitleMeta)
+        .use(rehypeMeta)
+        .use(rehypeFormat)
+        .use(rehypeStringify, {
+            allowDangerousHtml: true,
+        });
+}
+
+function rewriteElement(node: RootContent) {
+    if (node.type !== 'element') {
+        return;
+    }
+    if (node.tagName === 'a') {
+        rewriteAttr(node, 'href', transformLink);
+    }
+    else if (node.tagName === 'img') {
+        rewriteAttr(node, 'src', stripTop);
+    }
+}
+
+function rewriteAttr(
+    el: Element,
+    attr: string,
+    fn: (value: string) => string,
+) {
+    const value = el.properties?.[attr];
+    if (typeof value === 'string') {
+        el.properties![attr] = fn(value);
+    }
 }
 
 function transformLink(href: string) {
-	if (href.startsWith('/content/')) {
-		href = href.slice('/content/'.length - 1);
-	}
-	return href.replace(/\.md$/, '.html');
+    return stripTop(replaceExt(href));
 }
 
-function rewriteElements(node: RootContent) {
-	if (node.type === 'element' && node.tagName === 'a') {
-		const href = node.properties?.href;
-		if (typeof href === 'string') {
-			node.properties!.href = transformLink(href);
-		}
-	}
+function stripTop(href: string) {
+    const matches = /^\/[^/]+(\/.*)$/.exec(href);
+    return matches ? matches[1] : href;
 }
 
-const markdownProcessor = unified()
-	.use(remarkParse)
-	.use(remarkMath)
-	.use(remarkSmartypants)
-	.use(remarkRehype, { allowDangerousHtml: true })
-	.use(rehypeAttrs, { properties: 'attr' })
-	.use(rehypeKatex, { fleqn: true, macros: {} })
-	.use(rehypeRewrite, { rewrite: rewriteElements })
-	.use(markdownDocument as any)
-	.use(rehypeInferTitleMeta)
-	.use(rehypeMeta)
-	.use(rehypeFormat)
-	.use(rehypeStringify, { allowDangerousHtml: true })
-	;
+function replaceExt(href: string) {
+    return href.replace(/\.md$/, '.html');
+}
 
-async function convertFile(markFile: VFile) {
-	const htmlFile = await markdownProcessor.process(markFile);
-	htmlFile.value += '\n';
-	return htmlFile;
+function contentDocument() {
+    return (tree: RootContent): Root => ({
+        type: 'root',
+        children: [
+            { type: 'doctype' } as DocType,
+            tplDefault(tree) as RootContent,
+        ],
+    });
+}
+
+function indexDocument() {
+    return (): Root => ({
+        type: 'root',
+        children: [
+            { type: 'doctype' } as DocType,
+            tplIndex() as RootContent,
+        ],
+    });
 }
 
 function rewritePath(file: VFile) {
-	if (file.basename === README_MD) {
-		file.basename = 'index.html';
-	} else {
-		file.extname = '.html';
-	}
-	if (file.dirname) {
-		const parts = file.dirname.split(path.sep);
-		parts[0] = BUILD_DIR;
-		file.dirname = parts.join(path.sep);
-	} else {
-		file.dirname = BUILD_DIR;
-	}
+    file.dirname = file.dirname
+        ? replaceTop(file.dirname, BUILD_DIR)
+        : BUILD_DIR;
+    file.extname = '.html';
 }
 
-async function convertPath(markPath: string) {
-	const markFile = await read(markPath, { encoding: 'utf8' });
-	const htmlFile = await convertFile(markFile);
-	console.error(reporter(htmlFile));
-
-	rewritePath(htmlFile);
-	await fs.mkdir(htmlFile.dirname!, { recursive: true });
-	await write(htmlFile);
-}
-
-function main() {
-	glob.sync('content/**/*.md').concat('README.md')
-		.map(convertPath);
-	fs.cp('public', 'build', { recursive: true });
+function replaceTop(filePath: string, rootDir: string) {
+    const parts = filePath.split('/');
+    parts[0] = rootDir;
+    return parts.join('/');
 }
 
 main();

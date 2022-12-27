@@ -4,6 +4,9 @@
 	--font-size-lg: 2rem;
 	--font-size-xl: 4rem;
 
+	/*
+	 * https://getbootstrap.com/docs/5.2/utilities/colors/
+	 */
 	--gray-100: #f8f9fa;
 	--gray-800: #343a40;
 	--gray-900: #212529;
@@ -31,10 +34,6 @@ h1 {
 *::before,
 *::after {
 	box-sizing: border-box;
-}
-
-html {
-	scroll-behavior: smooth;
 }
 
 body {
@@ -72,16 +71,4 @@ article {
 	.math-display > .katex-display.fleqn > .katex {
 		padding-left: 0;
 	}
-}
-
-.math-simple {
-	margin-bottom: 0;
-}
-
-.math-simple + .math > .katex-display {
-	margin: 0;
-}
-
-.math-simple + .math + p {
-	margin-top: 0;
 }
