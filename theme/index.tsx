@@ -1,5 +1,8 @@
 import { h } from 'hastscript';
+import config from './config.js';
 import criticalCss from './critical.js';
+
+const Fragment = 'x-fragment';
 
 const tplIndex = () => (
   <html lang="en">
@@ -11,15 +14,23 @@ const tplIndex = () => (
     </head>
 
     <body>
-      <section>
-        <h2>Math for ML</h2>
-        <a href="/math/linear-algebra.html">
-          <article>
-            <h3>Linear algebra</h3>
-            <p>Vectors and matricies</p>
-          </article>
-        </a>
-      </section>
+      <>
+        {config.groups.map(group => (
+          <section>
+            <h2>{group.title}</h2>
+            <>
+              {group.posts.map(post => (
+                <a href={post.href} class="post-slat">
+                  <article>
+                    <h3>{post.title}</h3>
+                    <p>{post.subhead}</p>
+                  </article>
+                </a>
+              ))}
+            </>
+          </section>
+        ))}
+      </>
     </body>
   </html>
 );

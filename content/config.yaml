@@ -1,0 +1,17 @@
+groups:
+  - title: Math for ML
+    posts:
+      - title: Linear algebra
+        subhead: Vectors and matricies
+        href: /math/linear-algebra.html
+      - title: Differential calculus
+        subhead: Derivatives & automatic differentiation
+        href: /math/differential-calculus.html
+  - title: ML basics
+    posts:
+      - title: Activation functions
+        subhead: Sigmoid, ReLU, softmax and others
+        href: /ml/activation-functions.html
+      - title: Loss functions
+        subhead: L₁ vs. L₂ regularization
+        href: /ml/loss-functions.html

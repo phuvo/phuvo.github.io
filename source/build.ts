@@ -54,6 +54,9 @@ function processContent(markFile: VFile) {
 async function processIndex() {
     const processor = unified()
         .use(indexDocument)
+        .use(rehypeRewrite, {
+            rewrite: rewriteElement,
+        })
         .use(rehypeFormat)
         .use(rehypeStringify, {
             allowDangerousHtml: true,
@@ -78,10 +81,10 @@ function createProcessor() {
             fleqn: true,
             macros: {},
         })
+        .use(contentDocument)
         .use(rehypeRewrite, {
             rewrite: rewriteElement,
         })
-        .use(contentDocument)
         .use(rehypeInferTitleMeta)
         .use(rehypeMeta)
         .use(rehypeFormat)
@@ -90,7 +93,7 @@ function createProcessor() {
         });
 }
 
-function rewriteElement(node: RootContent) {
+function rewriteElement(node: RootContent, index: number, parent: Element) {
     if (node.type !== 'element') {
         return;
     }
@@ -99,6 +102,9 @@ function rewriteElement(node: RootContent) {
     }
     else if (node.tagName === 'img') {
         rewriteAttr(node, 'src', stripTop);
+    }
+    else if (node.tagName === 'x-fragment') {
+        parent.children.splice(index, 1, ...node.children);
     }
 }
 
@@ -118,8 +124,8 @@ function transformLink(href: string) {
 }
 
 function stripTop(href: string) {
-    const matches = /^\/[^/]+(\/.*)$/.exec(href);
-    return matches ? matches[1] : href;
+    const matches = /^\/(content|public)(\/.*)$/.exec(href);
+    return matches ? matches[2] : href;
 }
 
 function replaceExt(href: string) {
