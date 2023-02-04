@@ -7,7 +7,10 @@ groups:
       - title: Differential calculus
         subhead: Derivatives & automatic differentiation
         href: /math/differential-calculus.html
-  - title: ML basics
+      - title: Partial derivatives
+        subhead: Gradient vectors & Jacobian matricies
+        href: /math/partial-derivatives.html
+  - title: ML topics
     posts:
       - title: Activation functions
         subhead: Sigmoid, ReLU, softmax and others
@@ -15,3 +18,9 @@ groups:
       - title: Loss functions
         subhead: L₁ vs. L₂ regularization
         href: /ml/loss-functions.html
+      - title: Backpropagation by hand
+        subhead: Example with concrete numbers
+        href: /ml/backprop-by-hand.html
+      - title: Attention mechanism
+        subhead: Scaled dot-product attention
+        href: /ml/attention-mechanism.html

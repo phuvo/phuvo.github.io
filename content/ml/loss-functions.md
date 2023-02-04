@@ -5,11 +5,11 @@
 Regularization avoids overfitting by adding a penalty to the model's loss function
 
 $$
-\underbrace{\tilde{L}(\theta;x,y)}_\text{total loss}
+\underbrace{\tilde{L}(\theta;x,y)}_\text{\footnotesize{total loss}}
 =
-\underbrace{L(\theta;x,y)}_\text{data loss}
+\underbrace{L(\theta;x,y)}_\text{\footnotesize{data loss}}
 \, + \!
-\underbrace{\lambda \Omega(\theta)}_\text{regularization loss}
+\underbrace{\lambda \Omega(\theta)}_\text{\footnotesize{regularization loss}}
 $$
 
 where $\lambda$ is the *regularization rate*, and $\Omega(\theta)$ measures the model complexity.
