@@ -1,8 +1,8 @@
 # Partial derivatives
 
 $$
-\gdef\pdv#1#2{\frac{\partial #1}{\partial #2}}
 \gdef\vb#1{\mathbf{#1}}
+\gdef\pdv#1#2{\frac{\partial #1}{\partial #2}}
 \gdef\nhq{\hspace{-.7em}}
 $$
 

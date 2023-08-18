@@ -27,12 +27,11 @@ html {
 	display: block;
 	margin-bottom: 1rem;
 	text-decoration: none;
-}
 
-.post-slat h3 {
-	margin: 0;
-}
-
-.post-slat p {
-	margin: 0;
+	& h3 {
+		margin: 0;
+	}
+	& p {
+		margin: 0;
+	}
 }

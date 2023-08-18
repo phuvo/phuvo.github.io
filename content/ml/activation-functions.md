@@ -38,3 +38,5 @@ $$
 
 > We choose this distribution since neuron inputs tend to follow a normal distribution, especially
 with Batch normalization.
+
+See <https://arxiv.org/abs/1606.08415>
