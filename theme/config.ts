@@ -2,18 +2,18 @@ import fs from 'node:fs/promises';
 import { parse } from 'yaml';
 
 interface Config {
-    groups: Group[];
+	groups: Group[];
 }
 
 interface Group {
-    title: string;
-    posts: Post[];
+	title: string;
+	posts: Post[];
 }
 
 interface Post {
-    title: string;
-    subhead: string;
-    href: string;
+	title: string;
+	subhead: string;
+	href: string;
 }
 
 const yaml = await fs.readFile('content/config.yaml', { encoding: 'utf8' });

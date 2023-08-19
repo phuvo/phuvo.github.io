@@ -24,3 +24,14 @@ groups:
       - title: Attention mechanism
         subhead: Scaled dot-product attention
         href: /ml/attention-mechanism.html
+      - title: Transformers
+        subhead: In equations
+        href: /ml/transformers.html
+  - title: Language models
+    posts:
+      - title: Benchmarks
+        subhead: WinoGrande & HellaSwag
+        href: /lm/benchmarks.html
+      - title: Misc terms
+        subhead: Zero-shot
+        href: /lm/misc-terms.html
